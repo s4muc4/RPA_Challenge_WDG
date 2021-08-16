@@ -1,0 +1,39 @@
+
+	E´ë›Jï±K†‚‹`v$½–defVar --name var_boolStartExist --type Boolean
+defVar --name FinalMessage --type String
+defVar --name var_excel --type Excel
+defVar --name var_dtPeople --type DataTable
+defVar --name var_txtPerson --type String
+defVar --name var_intCount --type Numeric
+defVar --name row_iterator --type Numeric
+defVar --name var_txtFirstName --type String
+defVar --name var_txtLastName --type String
+defVar --name var_txtCompanyName --type String
+defVar --name var_txtRoleInCompany --type String
+defVar --name var_txtAddress --type String
+defVar --name var_txtEmail --type String
+defVar --name var_txtPhoneNumber --type String
+excelOpen --file "C:\\Users\\slfo\\OneDrive - GFT Technologies SE\\Documents\\WDG\\rpa_challange\\challenge.xlsx" --comment "Open sheet of People (Configure path for your machine)" var_excel=value
+excelGetTable --file ${var_excel} --sheet Sheet1 --fromrow 1 --fromcolumn 1 --hasheaders  var_dtPeople=value
+excelClose --file ${var_excel} --comment "Close shee of People"
+webStart --name Browser --type "Chrome"
+webNavigate --url "http://www.rpachallenge.com/"
+webWaitElement --selector "XPath" --xpath "/html/body/app-root/div[2]/app-rpa1/div/div[1]/div[6]/button" --timeout "00:00:10" var_boolStartExist=value
+logMessage --message "The element start is ${var_boolStartExist}" --type "Info"
+webClick --selector "XPath" --xpath "//*[@class=\"waves-effect col s12 m12 l12 btn-large uiColorButton\"]"
+for --variable ${row_iterator} --from 1 --to ${var_dtPeople.Rows} --step 1 --comment "For in datatable of person"
+	mapTableRow --dataTable ${var_dtPeople} --row ${row_iterator} --mappings "name=First Name=${var_txtFirstName},name=Last Name =${var_txtLastName},name=Company Name=${var_txtCompanyName},name=Role in Company=${var_txtRoleInCompany},name=Address=${var_txtAddress},name=Email=${var_txtEmail},name=Phone Number=${var_txtPhoneNumber}" --comment "Get data of row"
+	if --left "${var_txtFirstName}" --operator "Is_Null_Or_Empty"
+		break
+	endIf
+	webSet --value "${var_txtFirstName}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelFirstName\"]" --comment "First Name"
+	webSet --value "${var_txtLastName}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelLastName\"]" --comment "Last Name"
+	webSet --value "${var_txtEmail}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelEmail\"]" --comment Email
+	webSet --value "${var_txtPhoneNumber}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelPhone\"]" --comment "Phone Number"
+	webSet --value "${var_txtAddress}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelAddress\"]" --comment Adress
+	webSet --value "${var_txtCompanyName}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelCompanyName\"]" --comment "Company Name"
+	webSet --value "${var_txtRoleInCompany}" --selector "XPath" --xpath "//*[@ng-reflect-name=\"labelRole\"]" --comment "Role in Company"
+	webClick --selector "XPath" --xpath "//*[@value=\"Submit\"]"
+next
+messageBox --title teste --text ConcluÃ­do --icon "Information" --buttons "OK" --defaultbutton "FirstButton"
+webClose --name Browser"	þ¶)™\}@‚ }AvTÇ*	20.12.5.0
